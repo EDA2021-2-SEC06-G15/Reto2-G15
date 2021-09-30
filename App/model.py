@@ -98,7 +98,7 @@ def addArtwork(catalog, artwork):
                     artwork['Width (cm)'], artwork['Seat Height (cm)'], artwork['Duration (sec.)'], artwork['Date'], artwork['DateAcquired'],artwork['CreditLine'], artwork['Dimensions'], artwork['Department'], artwork['Classification'])
     
     lt.addLast(catalog['artworks'], artwork)
-    mp.put(catalog['artworks'], artwork['ObjectID'], artwork)
+    mp.put(catalog['Medium'], artwork['ObjectID'], artwork)
     mediums = artwork['Medium'].split(",")  # Se obtienen las tecnicas
     for m in mediums:
         addMedium(catalog, m.strip(), artwork) #Se agrega la tecnica
@@ -109,7 +109,7 @@ def addMedium(catalog, medium, artwork):
     Esta función adiciona un tecnica usadas
     en la obra.
     """
-    artworks = catalog['artworks']
+    artworks = catalog['Medium']
     existartwork = mp.contains(artworks, medium)
     existmedium = mp.contains()
     if existartwork:
