@@ -80,6 +80,17 @@ def newCatalog():
     
     return catalog
 
+def newMedium(name):
+    """
+    Crea una nueva estructura para modelar los medios de una obra
+    Se crea una lista para guardar las tecnicas de dicha obra
+    """
+    medium = {'name': "",
+              "artworks": None,}
+    medium['name'] = name
+    medium['books'] = lt.newList('SINGLE_LINKED', compareMediumsByName)
+    return medium
+
 # Funciones para agregar informacion al catalogo
 
 def addArtist(catalog, artist):
@@ -109,17 +120,16 @@ def addMedium(catalog, medium, artwork):
     Esta función adiciona un tecnica usadas
     en la obra.
     """
-    artworks = catalog['Medium']
-    existartwork = mp.contains(artworks, medium)
-    existmedium = mp.contains()
-    if existartwork:
+    mediums = catalog['Medium']
+    existmedium = mp.contains(mediums, medium)
+    if existmedium:
 
-        if existauthor:
-            entry = mp.get(artworks, medium)
+        if existmedium:
+            entry = mp.get(mediums, medium)
             author = me.getValue(entry)
         else:
-            author = newAuthor(medium)
-            mp.put(authors, medium, author)
+            author = newMedium(medium)
+            mp.put(mediums, medium, author)
         lt.addLast(author['books'], artwork)
 
 # Funciones para creacion de datos
@@ -781,13 +791,23 @@ def compareMapMediums(id, entry):
     y entry una pareja llave-valor
     """
     identry = me.getKey(entry)
-    if (int(id) == int(identry)):
+    if ((id) == (identry)):
         return 0
-    elif (int(id) > int(identry)):
-        return 1
     else:
         return -1
 
+def compareMediumsByName(keyname, medium):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    authentry = me.getKey(medium)
+    if (keyname == authentry):
+        return 0
+    elif (keyname > authentry):
+        return 1
+    else:
+        return -1
 
 # Funciones de ordenamiento
 
