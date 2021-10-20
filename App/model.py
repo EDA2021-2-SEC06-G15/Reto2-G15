@@ -73,8 +73,13 @@ def newCatalog():
 
 
     catalog['Medium'] = mp.newMap(10000,
-                                   maptype='CHAINING',
-                                   loadfactor=0.75,
+                                   maptype='PROBING',
+                                   loadfactor=0.8,
+                                   comparefunction=compareMapMediums)
+
+    catalog['Nationality'] = mp.newMap(10000,
+                                   maptype='PROBING',
+                                   loadfactor=0.8,
                                    comparefunction=compareMapMediums)
 
     
@@ -86,9 +91,9 @@ def newMedium(name):
     Se crea una lista para guardar las tecnicas de dicha obra
     """
     medium = {'name': "",
-              "artworks": None,}
+              "artworks": None}
     medium['name'] = name
-    medium['books'] = lt.newList('SINGLE_LINKED', compareMediumsByName)
+    medium['artworks'] = lt.newList('SINGLE_LINKED', compareMediumsByName)
     return medium
 
 # Funciones para agregar informacion al catalogo
@@ -113,26 +118,30 @@ def addArtwork(catalog, artwork):
     mediums = artwork['Medium'].split(",")  # Se obtienen las tecnicas
     for m in mediums:
         addMedium(catalog, m.strip(), artwork) #Se agrega la tecnica
-    
+
+
 
 def addMedium(catalog, medium, artwork):
-    """
-    Esta función adiciona un tecnica usadas
-    en la obra.
-    """
-    mediums = catalog['Medium']
-    existmedium = mp.contains(mediums, medium)
-    if existmedium:
-
-        if existmedium:
-            entry = mp.get(mediums, medium)
-            author = me.getValue(entry)
+    
+    try:
+        mediums = catalog['Medium']
+        if (artwork['Medium'] != ''):
+            pubmedium = artwork['Medium']
+            
         else:
-            author = newMedium(medium)
-            mp.put(mediums, medium, author)
-        lt.addLast(author['books'], artwork)
+            pubmedium = ""
+        existmedium = mp.contains(mediums, pubmedium)
+        if existmedium:
+            entry = mp.get(mediums, pubmedium)
+            medium = me.getValue(entry)
+        else:
+            medium = newMedium(pubmedium)
+            mp.put(mediums, pubmedium, medium)
+        lt.addLast(medium['artworks'], artwork)
+    except Exception:
+        return None
 
-# Funciones para creacion de datos
+
 def newArtist(name, id, nacionality, gender, begin, end):
     """
     Esta estructura almancena los artistas utilizados.
